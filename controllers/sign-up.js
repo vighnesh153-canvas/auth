@@ -31,16 +31,13 @@ const saveConfirmationInfo = (res, URL, OPTIONS, emailServiceBody) => {
         .then(jsonResponse => jsonResponse.json())
         .then(response => {
             if (response.error) {
-                console.log(response.error)
                 res.status(500).json({message: "FAILED" });
                 return;
             }
 
             sendConfirmationEmail(res, emailServiceBody);
-
         })
         .catch(e => {
-            console.log(e)
             res.status(500).json({message: "FAILED" })
         });
 }
@@ -120,7 +117,6 @@ module.exports = (req, res, next) => {
             })
         };
 
-        console.log(options)
         const emailServiceBody = {
             to: email,
             subject: appName + " sign-up verification",

@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 
 module.exports = value => {
-    const saltValue = 5;
-    return bcrypt.hash(value, saltValue);
+    const saltRounds = 12;
+    return bcrypt.hash(value, saltRounds);
 };
