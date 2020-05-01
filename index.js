@@ -12,6 +12,9 @@ const app = express();
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
+const corsConfiguration = require('./controllers/cors-config');
+app.use(corsConfiguration);
+
 const routes = require('./routes');
 app.use(routes);
 
