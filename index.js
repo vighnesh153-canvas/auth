@@ -15,6 +15,9 @@ app.use(bodyParser.json());
 const corsConfiguration = require('./controllers/cors-config');
 app.use(corsConfiguration);
 
+const helmet = require('helmet');
+app.use(helmet());
+
 const routes = require('./routes');
 app.use(routes);
 
