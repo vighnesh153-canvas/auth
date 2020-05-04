@@ -2,6 +2,8 @@ const fetch = require('node-fetch');
 
 const md5HashGenerator = require('../helpers/md5-hash-generator');
 
+const report = " Report the error to me so I can start a fix."
+
 module.exports = async (req, res) => {
     const providedEmail = req.body.email;
     const providedVerificationToken = req.body.verificationToken;
@@ -33,15 +35,26 @@ module.exports = async (req, res) => {
         const data = await response.json();
         hashedEmail = md5HashGenerator(providedEmail);
         userInfo = data[hashedEmail];
-        if (!userInfo) throw new Error("");
+        if (!userInfo) {
+            res.status(400).json({
+                message: "INVALID_CREDENTIALS",
+                details: "This email has never been used to register an account." + report
+            });
+            return;
+        }
     } catch (e) {
-        res.status(500).json({ message: "FAILED" });
+        res.status(500).json({
+            message: "FAILED",
+            details: "Failed to verify the code." + report
+        });
         return;
     }
 
-    if (providedEmail !== userInfo.email ||
-        providedVerificationToken !== userInfo.verificationToken) {
-        res.status(401).json({ message: "UNAUTHORIZED" });
+    if (providedVerificationToken !== userInfo.verificationToken) {
+        res.status(401).json({
+            message: "UNAUTHORIZED",
+            details: "Verification code is not valid."
+        });
         return;
     }
 
@@ -55,7 +68,10 @@ module.exports = async (req, res) => {
             return;
         }
     } catch (e) {
-        res.status(500).json({ message: "FAILED" });
+        res.status(500).json({
+            message: "FAILED",
+            details: "Failed to check if user is already registered." + report
+        });
         return;
     }
 
@@ -76,6 +92,9 @@ module.exports = async (req, res) => {
         if (responseObject.error) throw new Error();
         res.status(201).json({message: "SUCCESS" });
     } catch (e) {
-        res.status(500).json({ message: "FAILED" });
+        res.status(500).json({
+            message: "FAILED",
+            details: "Something went wrong. Failed to register the account." + report
+        });
     }
 };

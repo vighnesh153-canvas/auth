@@ -5,6 +5,8 @@ const md5HashGenerator = require('../helpers/md5-hash-generator');
 
 const createJWT = require('../helpers/create-jwt');
 
+const report = " Report the error to me so I can start a fix."
+
 module.exports = async (req, res) => {
     const providedEmail = req.body.email;
     const providedPassword = req.body.password;
@@ -29,19 +31,25 @@ module.exports = async (req, res) => {
 
         user = users[hashedEmail];
     } catch (e) {
-        res.status(500).json({ message: "FAILED" });
+        res.status(500).json({
+            message: "FAILED",
+            details: "Failed to check if the email address is registered." + report
+        });
         return;
     }
 
     try {
         const isValid = await bcryptoVerifyHash(providedPassword, user.password);
-        console.log(isValid);
+
         if (!isValid) {
             res.status(401).json({ message: "INVALID_PASSWORD" });
             return;
         }
     } catch (e) {
-        res.status(500).json({ message: "FAILED" });
+        res.status(500).json({
+            message: "FAILED",
+            details: "Failed to verify password." + report
+        });
         return;
     }
 
