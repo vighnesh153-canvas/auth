@@ -113,9 +113,8 @@ module.exports = (req, res, next) => {
         }
 
         const databasePrefix = process.env.MODE === "DEV" ? "test/" : "";
-        const authParam = `?auth=${req.app.get('authToken')}`;
         const usersUrl = process.env.DB_URL + databasePrefix +
-            appName + "/users.json" + (req.app.get('authToken') ? authParam : "");
+            appName + "/users.json";
 
         try {
             const responseJson = await fetch(usersUrl);

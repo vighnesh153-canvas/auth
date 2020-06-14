@@ -25,9 +25,8 @@ module.exports = async (req, res) => {
     }
 
     const databasePrefix = process.env.MODE === "DEV" ? "test/" : "";
-    const authParam = `?auth=${req.app.get('authToken')}`;
     const signUpConfirmationUrl = process.env.DB_URL + databasePrefix +
-        appName + "/signUpConfirmation.json" + (req.app.get('authToken') ? authParam : "");
+        appName + "/signUpConfirmation.json";
 
     let userInfo, hashedEmail;
     try {
